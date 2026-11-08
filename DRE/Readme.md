@@ -1,37 +1,34 @@
-# Financial Dashboard | Power BI
+# Dashboard DRE | Power BI
 
-## Overview
+## Sobre o projeto
 
-This project is a financial dashboard developed using Microsoft Power BI, designed to provide insights into financial data through interactive visualizations and data analysis.
+Este projeto consiste em um dashboard de Demonstração do Resultado do Exercício (DRE), desenvolvido no Microsoft Power BI, com o objetivo de proporcionar uma visão estruturada do desempenho econômico e financeiro de uma empresa.
 
-The dashboard aims to support financial monitoring, improve data visibility, and facilitate data-driven decision-making.
+A solução permite organizar e analisar informações contábeis e financeiras, facilitando a compreensão dos resultados e apoiando análises gerenciais.
 
-## Technologies
+## Objetivos
+
+- Analisar o desempenho econômico e financeiro.
+- Organizar informações de receitas, custos e despesas.
+- Facilitar o acompanhamento dos resultados.
+- Apoiar análises de rentabilidade e desempenho.
+- Proporcionar maior visibilidade das informações gerenciais.
+
+## Tecnologias utilizadas
 
 - Microsoft Power BI
 - DAX
 - Power Query
 - Power BI Project (PBIP)
 
-## Project Structure
+## Estrutura do projeto
 
-- `.pbip` — Power BI project file.
-- `.Report` — Report definitions and visual elements.
-- `.SemanticModel` — Data model, relationships, and measures.
+- `.pbip`: arquivo principal do projeto Power BI.
+- `.Report`: definições do relatório e elementos visuais.
+- `.SemanticModel`: modelo semântico, relacionamentos e medidas.
 
-## Key Objectives
-
-- Organize and analyze financial information.
-- Provide a clear view of financial performance.
-- Facilitate data exploration and analysis.
-- Support business decision-making.
-
-## Dashboard Preview
-
-_Add dashboard screenshots here._
-
-## Author
+## Autor
 
 **Mateus Rocca**
 
-Data Analytics | Business Intelligence | Power BI
+Dados |Engenharia de Dados | Business Intelligence | Análise de Dados | IA 

@@ -1,0 +1,98 @@
+table Movimentação
+	lineageTag: 005b6b3a-8fe8-457d-8c32-67887d382b9b
+
+	column Cliente
+		dataType: string
+		lineageTag: cd0761e7-3cda-4408-957b-7772e049c0f4
+		summarizeBy: none
+		sourceColumn: Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column Valor
+		dataType: double
+		lineageTag: 4e73223a-872b-4ee5-a68f-67045df775d0
+		summarizeBy: sum
+		sourceColumn: Valor
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Data da Movimentação'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 1dbfac79-af46-44d6-9c59-9867b9fe99dc
+		summarizeBy: none
+		sourceColumn: Data da Movimentação
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Conta Contábil'
+		dataType: int64
+		formatString: 0
+		lineageTag: 66f96982-41de-4589-9925-fddf1046f8da
+		summarizeBy: sum
+		sourceColumn: Conta Contábil
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tipo de Movimento'
+		dataType: string
+		lineageTag: 322e0474-69dc-464b-9840-b98f772feddd
+		summarizeBy: none
+		sourceColumn: Tipo de Movimento
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Natureza da Conta'
+		dataType: string
+		lineageTag: 86d88a99-1253-4cff-a504-fd1a9e3af9d6
+		summarizeBy: none
+		sourceColumn: Natureza da Conta
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Classe Operacional'
+		dataType: string
+		lineageTag: a090702a-9db8-43e1-9b15-442ea97e0fce
+		summarizeBy: none
+		sourceColumn: Classe Operacional
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tipo de Saída'
+		dataType: string
+		lineageTag: e46465ea-33a1-412a-9806-733f8e79c11b
+		summarizeBy: none
+		sourceColumn: Tipo de Saída
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Valor com sinal'
+		dataType: double
+		lineageTag: ffc5e27c-2751-48b3-9626-5c87f36d0fec
+		summarizeBy: sum
+		sourceColumn: Valor com sinal
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Movimentação = m
+		mode: import
+		source =
+				let
+				  Origem = Excel.Workbook(File.Contents("C:\Users\T-GAMER\OneDrive\Área de Trabalho\Power BI\Case-Financeiro\Base de Dados\Base de Dados.xlsx"), true, true),
+				  #"Navegação 1" = Origem{[Item = "Movimentação", Kind = "Sheet"]}[Data],
+				    #"Coluna Condicional Adicionada" = Table.AddColumn(#"Navegação 1", "Valor com sinal", each if [Natureza da Conta] = "Receita" then [Valor] else -[Valor]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Coluna Condicional Adicionada",{{"Cliente", type text}, {"Valor", type number}, {"Data da Movimentação", type date}, {"Conta Contábil", Int64.Type}, {"Tipo de Movimento", type text}, {"Natureza da Conta", type text}, {"Classe Operacional", type text}, {"Tipo de Saída", type text}, {"Valor com sinal", type number}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

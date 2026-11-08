@@ -1,0 +1,51 @@
+table fLancamentos
+	lineageTag: de4d678a-2273-4a73-b4cf-ff9587afa974
+
+	column competencia_data
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 5608b7e5-2ff8-4f09-a784-c97df4d7001c
+		summarizeBy: none
+		sourceColumn: competencia_data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column planoContas_id
+		dataType: string
+		lineageTag: 25d7a404-34d8-45f4-92a1-d22e7cf47feb
+		summarizeBy: none
+		sourceColumn: planoContas_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column valor
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 5341391c-490b-4eb8-8c81-cf39a705b77f
+		summarizeBy: sum
+		sourceColumn: valor
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	partition fLancamentos = m
+		mode: import
+		source =
+				let
+				  Origem = Excel.Workbook(File.Contents(CaminhoArquivo & "\BaseDados.xlsx"), true, true),
+				    #"Linhas Filtradas" = Table.SelectRows(Origem, each Text.StartsWith([Name], "fLan")),
+				    #"Outras Colunas Removidas" = Table.SelectColumns(#"Linhas Filtradas",{"Data"}),
+				    #"Data Expandido" = Table.ExpandTableColumn(#"Outras Colunas Removidas", "Data", {"competencia_data", "planoContas_id", "valor"}, {"Data.competencia_data", "Data.planoContas_id", "Data.valor"}),
+				    #"Linhas em Branco Removidas" = Table.SelectRows(#"Data Expandido", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Linhas em Branco Removidas",{{"Data.competencia_data", "competencia_data"}, {"Data.planoContas_id", "planoContas_id"}, {"Data.valor", "valor"}}),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Colunas Renomeadas",{{"competencia_data", type date}, {"planoContas_id", type text}, {"valor", Currency.Type}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

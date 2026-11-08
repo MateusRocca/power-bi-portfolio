@@ -1,0 +1,28 @@
+relationship 5d2909cd-af25-7a62-c5d5-6f369fe71b4e
+	fromColumn: fLancamentos.competencia_data
+	toColumn: dCalendario.Data
+
+relationship 62ff8ae4-5e55-2981-f9c2-a33a185bea03
+	fromColumn: fOrcamento.competencia_data
+	toColumn: dCalendario.Data
+
+relationship d2f336e6-10ba-6cf0-b517-348a4c53ebed
+	fromColumn: fPrevisao.competencia_data
+	toColumn: dCalendario.Data
+
+relationship 984b3047-c9c1-761a-39a7-cf5a172fc897
+	fromColumn: fLancamentos.planoContas_id
+	toColumn: dPlanoConta.id
+
+relationship 22beeb95-803b-6795-9f4c-606209661a8f
+	fromColumn: fOrcamento.planoContas_id
+	toColumn: dPlanoConta.id
+
+relationship 790904cc-6606-d3c5-994d-42c5c28832e4
+	fromColumn: fPrevisao.planoContas_id
+	toColumn: dPlanoConta.id
+
+relationship d0749cb7-e142-178c-519e-ba65eb3753e7
+	fromColumn: dPlanoConta.mascaraDRE_id
+	toColumn: dEstruturaDRE.id
+

@@ -1,0 +1,33 @@
+table Clientes
+	lineageTag: 6cf523f8-e314-4f8a-954d-5a435b29540c
+
+	column 'Nome Cliente'
+		dataType: string
+		lineageTag: bd6f9a7a-e819-4d39-82e2-a27e34e9d5df
+		summarizeBy: none
+		sourceColumn: Nome Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Estado do Cliente'
+		dataType: string
+		lineageTag: f34f8e57-51fc-407b-bf56-1b1306675ba8
+		summarizeBy: none
+		sourceColumn: Estado do Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Clientes = m
+		mode: import
+		source =
+				let
+				  Origem = Excel.Workbook(File.Contents("C:\Users\T-GAMER\OneDrive\Área de Trabalho\Power BI\Case-Financeiro\Base de Dados\Clientes.xlsx"), true, true),
+				  #"Navegação 1" = Origem{[Item = "Planilha1", Kind = "Sheet"]}[Data],
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Navegação 1",{{"Nome Cliente", type text}, {"Estado do Cliente", type text}})
+				in
+				  #"Tipo Alterado"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

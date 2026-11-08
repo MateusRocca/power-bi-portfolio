@@ -1,0 +1,47 @@
+table fPrevisao
+	lineageTag: b432cb41-54cd-4eff-89d5-851340f83661
+
+	column competencia_data
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: f94be40d-6134-4be2-b756-e0ffda9062e7
+		summarizeBy: none
+		sourceColumn: competencia_data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column planoContas_id
+		dataType: string
+		lineageTag: cdf28f5d-e3ca-4fa9-a411-b58c25de14b6
+		summarizeBy: none
+		sourceColumn: planoContas_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column valor
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 2b092ee0-e222-40b9-a2ee-ce1b670cdec5
+		summarizeBy: sum
+		sourceColumn: valor
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	partition fPrevisao = m
+		mode: import
+		source =
+				let
+				  Origem = Excel.Workbook(File.Contents(CaminhoArquivo & "\BaseDados.xlsx"), true, true),
+				  #"Navegação 1" = Origem{[Item = "fPrevisao", Kind = "Sheet"]}[Data],
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Navegação 1",{{"planoContas_id", type text}, {"competencia_data", type date}, {"valor", Currency.Type}})
+				in
+				  #"Tipo Alterado"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

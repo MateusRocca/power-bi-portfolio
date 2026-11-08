@@ -1,0 +1,78 @@
+table dPlanoConta
+	lineageTag: 702dbf0a-f959-419b-8d5f-234fff75bcc3
+
+	column id
+		dataType: string
+		lineageTag: efbd159d-25e7-4d40-9ffa-0c897da3424f
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column index
+		dataType: int64
+		formatString: 0
+		lineageTag: 6efd3c22-6bfd-42de-b0b8-17ba9befef1e
+		summarizeBy: sum
+		sourceColumn: index
+
+		annotation SummarizationSetBy = Automatic
+
+	column descricaoN1
+		dataType: string
+		lineageTag: 656d9f32-b862-449b-832e-2f7651fe54d0
+		summarizeBy: none
+		sourceColumn: descricaoN1
+
+		annotation SummarizationSetBy = Automatic
+
+	column descricaoN2
+		dataType: string
+		lineageTag: aed68b64-9345-4b38-bbc6-74057badb954
+		summarizeBy: none
+		sourceColumn: descricaoN2
+
+		annotation SummarizationSetBy = Automatic
+
+	column detalharN2
+		dataType: int64
+		formatString: 0
+		lineageTag: 2b239248-bff1-4794-a6ab-6aec1fa3cf88
+		summarizeBy: sum
+		sourceColumn: detalharN2
+
+		annotation SummarizationSetBy = Automatic
+
+	column mascaraDRE_id
+		dataType: string
+		lineageTag: 55e831f1-02d5-4b25-8b14-497c1c598aca
+		summarizeBy: none
+		sourceColumn: mascaraDRE_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column tipoLancamento
+		dataType: int64
+		formatString: 0
+		lineageTag: a623bef1-3eff-42e1-bbe6-fc38af7069ce
+		summarizeBy: sum
+		sourceColumn: tipoLancamento
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dPlanoConta = m
+		mode: import
+		source =
+				let
+				  Origem = Excel.Workbook(File.Contents(CaminhoArquivo & "\BaseDados.xlsx"), true, true),
+				  #"Navegação 1" = Origem{[Item = "dPlanoConta", Kind = "Sheet"]}[Data],
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Navegação 1",{{"id", type text}}),
+				    #"Linhas em Branco Removidas" = Table.SelectRows(#"Tipo Alterado", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Linhas em Branco Removidas",{{"mascaraDRE_id", type text}, {"tipoLancamento", Int64.Type}, {"index", Int64.Type}, {"detalharN2", Int64.Type}})
+				in
+				    #"Tipo Alterado1"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

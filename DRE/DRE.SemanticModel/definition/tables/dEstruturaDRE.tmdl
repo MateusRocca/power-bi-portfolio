@@ -1,0 +1,65 @@
+table dEstruturaDRE
+	lineageTag: 31750f5b-7d29-4a63-9971-a0a1fce3dd21
+
+	column id
+		dataType: string
+		lineageTag: b456e013-9644-40af-8676-aa055d7c1ff1
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column index
+		dataType: int64
+		formatString: 0
+		lineageTag: d46d7127-8955-43c7-b0a1-ed1b032b554b
+		summarizeBy: none
+		sourceColumn: index
+
+		annotation SummarizationSetBy = Automatic
+
+	column contaGerencial
+		dataType: string
+		lineageTag: 37bf5b06-cf12-41f8-b65d-6a0aa4bc8d5c
+		summarizeBy: none
+		sourceColumn: contaGerencial
+		sortByColumn: index
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column subtotal
+		dataType: int64
+		formatString: 0
+		lineageTag: ebe38a0a-0811-4919-b40a-f02bc4f1815c
+		summarizeBy: none
+		sourceColumn: subtotal
+
+		annotation SummarizationSetBy = Automatic
+
+	column empresa
+		dataType: string
+		lineageTag: 96e3e84e-062a-4e3d-a343-168e7fd2504a
+		summarizeBy: none
+		sourceColumn: empresa
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dEstruturaDRE = m
+		mode: import
+		source =
+				let
+				  Origem = Excel.Workbook(File.Contents(CaminhoArquivo & "\BaseDados.xlsx"), true, true),
+				  #"Navegação 1" = Origem{[Item = "dEstruturaDRE", Kind = "Sheet"]}[Data],
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Navegação 1",{{"id", type text}}),
+				    #"Linhas em Branco Removidas" = Table.SelectRows(#"Tipo Alterado", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Outras Colunas Removidas" = Table.SelectColumns(#"Linhas em Branco Removidas",{"id", "index", "contaGerencial", "subtotal", "empresa"}),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Outras Colunas Removidas",{{"index", Int64.Type}, {"subtotal", Int64.Type}})
+				in
+				  #"Tipo Alterado1"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

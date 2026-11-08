@@ -1,0 +1,126 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 470.87014226852762,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 240.17537457992017,
+            "y": 33.690556317036545
+          },
+          "nodeIndex": "dCalendario",
+          "nodeLineageTag": "98cd3d60-ce6a-4633-8340-37e4cb90aa48",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 919.20066171794656,
+            "y": 28.44182067393789
+          },
+          "nodeIndex": "dEstruturaDRE",
+          "nodeLineageTag": "31750f5b-7d29-4a63-9971-a0a1fce3dd21",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 594.86171952538575,
+            "y": 32.828836791650737
+          },
+          "nodeIndex": "dPlanoConta",
+          "nodeLineageTag": "702dbf0a-f959-419b-8d5f-234fff75bcc3",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 449.07420711921293,
+            "y": 425.2908871760099
+          },
+          "nodeIndex": "fLancamentos",
+          "nodeLineageTag": "de4d678a-2273-4a73-b4cf-ff9587afa974",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 729.91400482210884,
+            "y": 428.45108947311411
+          },
+          "nodeIndex": "fOrcamento",
+          "nodeLineageTag": "fe887a23-d766-4495-8530-f96b2d956269",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 994.952786518778,
+            "y": 431.61129177021832
+          },
+          "nodeIndex": "fPrevisao",
+          "nodeLineageTag": "b432cb41-54cd-4eff-89d5-851340f83661",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 1307.394607192716,
+            "y": 110.96627121023056
+          },
+          "nodeIndex": "Medidas",
+          "nodeLineageTag": "d61b6a9f-d126-4683-b347-5523cad54423",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1351.2192326127958,
+            "y": 211.06534243945282
+          },
+          "nodeIndex": "auxMeta",
+          "nodeLineageTag": "9c9098d2-177f-41af-9d5a-aef7e6e261cb",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Todas as tabelas",
+      "zoomValue": 63.287087723234038,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Todas as tabelas",
+  "defaultDiagram": "Todas as tabelas"
+}

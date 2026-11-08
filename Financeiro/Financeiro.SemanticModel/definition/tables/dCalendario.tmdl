@@ -1,0 +1,61 @@
+table dCalendario
+	lineageTag: d8830c59-a367-40c2-a4ec-73e0209bb2b1
+
+	column Date
+		formatString: Short Date
+		lineageTag: 301f4ef0-bb26-43d2-9b8a-8b9e11565bf2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: d328330a-8307-4ed6-9d5d-9a282cd05883
+			defaultHierarchy: LocalDateTable_bca8a901-27de-48e7-81d5-bd05b0ed00c1.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Ano = YEAR(dCalendario[Date])
+		formatString: 0
+		lineageTag: 722dd2bb-9c55-4fb5-bec1-6867b3f12ffd
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes = MONTH(dCalendario[Date])
+		dataType: int64
+		formatString: 0
+		lineageTag: 1309ce98-4625-40d5-8745-c0fdb1fe6db1
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column AnoMes = YEAR([Date]) * 100 + MONTH([Date])
+		formatString: 0
+		lineageTag: 9def25fc-da98-4af7-a66f-fc669bc52482
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column NomeMês = FORMAT(dCalendario[Date], "MMMM")
+		lineageTag: 6cef4b75-9288-4fd9-9d4a-26d5b470c6ec
+		summarizeBy: none
+		sortByColumn: Mes
+
+		annotation SummarizationSetBy = Automatic
+
+	column AnoEMes = FORMAT(dCalendario[Date], "MMM/yyyy")
+		lineageTag: e360ddfc-18dc-4d80-a5af-5077675ff67d
+		summarizeBy: none
+		sortByColumn: AnoMes
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dCalendario = calculated
+		mode: import
+		source = CALENDARAUTO()
+
+	annotation PBI_Id = b7d4fc0df1be41ae9035cf8fb23cf56b
+

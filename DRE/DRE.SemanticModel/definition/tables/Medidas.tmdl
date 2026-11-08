@@ -1,0 +1,546 @@
+table Medidas
+	lineageTag: d61b6a9f-d126-4683-b347-5523cad54423
+
+	measure '$ Valor Total Lançamento' =
+			
+			//Essa medida multiplica o valor por 1 ou -1, assim o que é negativo continua negativo e positivo ..
+			SUMX(
+			    fLancamentos,
+			    fLancamentos[valor] * RELATED(dPlanoConta[tipoLancamento]
+			    ))
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		displayFolder: Totais
+		lineageTag: fc3dfaf8-8602-44e4-ac38-0ab8330bb8ef
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '$ Realizado' = ```
+			
+			VAR vSubtotal = MAX(dEstruturaDRE[subtotal]) // máximo da linha (só há dois valores 0 ou 1)
+			VAR vIndex = MAX(dEstruturaDRE[index]) // Máximo da linha (vai de 1 a 13)
+			VAR vTotal = [$ Valor Total Lançamento] 
+			VAR vDetalharN2 = SELECTEDVALUE(dPlanoConta[detalharN2])
+			
+			VAR vAcumulado =
+			    CALCULATE(
+			        //altera o contexto de filtro
+			        [$ Valor Total Lançamento],
+			            ALL(dEstruturaDRE), // só filtro externo
+			            VALUES(dEstruturaDRE[empresa]), //respeitando filtro por empresa, n mistura acumulado
+			            dEstruturaDRE[index] < vIndex // somar apenas os registros cujo índice seja menor que o índice da linha atual.
+			    )
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    vSubtotal = 1 && ISINSCOPE(dPlanoConta[descricaoN1]), BLANK(),
+			    vDetalharN2 = 0 && ISINSCOPE(dPlanoConta[descricaoN2]), BLANK(),
+			    vSubtotal = 0, vTotal, // Significa que é uma linha comum da DRE, retorna o vTotal (apenas o valor daquela linha).
+			    vSubtotal = 1, vAcumulado // Significa que é uma linha de subtotal retorna o vAcumulado (a soma de tudo o que veio antes).
+			)
+			```
+		formatString: \$#,0.00000;(\$#,0.00000);\$#,0.00000
+		displayFolder: DRE
+		lineageTag: 17da4a71-74e7-4014-95fe-2068b83fae23
+
+		annotation PBI_FormatHint = {"currencyCulture":"es-US"}
+
+	measure '$ Valor Total Orçado' =
+			
+			//Essa medida multiplica o valor por 1 ou -1, assim o que é negativo continua negativo e positivo ..
+			SUMX(
+			    fOrcamento,
+			    fOrcamento[valor] * RELATED(dPlanoConta[tipoLancamento]
+			    ))
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: Totais
+		lineageTag: a4e17951-feda-4edf-b1f1-7424295dc3d4
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '$ Valor Total Previsto' =
+			
+			//Essa medida multiplica o valor por 1 ou -1, assim o que é negativo continua negativo e positivo ..
+			SUMX(
+			    fPrevisao,
+			    fPrevisao[valor] * RELATED(dPlanoConta[tipoLancamento]
+			    ))
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: Totais
+		lineageTag: 55833cad-cfa2-481c-aa9e-74230b5428fb
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '$ Orçado' = ```
+			
+			VAR vSubtotal = MAX(dEstruturaDRE[subtotal]) // máximo da linha (só há dois valores 0 ou 1)
+			VAR vIndex = MAX(dEstruturaDRE[index]) // Máximo da linha (vai de 1 a 13)
+			VAR vTotal = [$ Valor Total Orçado] 
+			VAR vDetalharN2 = SELECTEDVALUE(dPlanoConta[detalharN2])
+			
+			VAR vAcumulado =
+			    CALCULATE(
+			        //altera o contexto de filtro
+			        [$ Valor Total Orçado],
+			            ALL(dEstruturaDRE), // só filtro externo
+			            VALUES(dEstruturaDRE[empresa]), //respeitando filtro por empresa, n mistura acumulado
+			            dEstruturaDRE[index] < vIndex // somar apenas os registros cujo índice seja menor que o índice da linha atual.
+			    )
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    vSubtotal = 1 && ISINSCOPE(dPlanoConta[descricaoN1]), BLANK(),
+			    vDetalharN2 = 0 && ISINSCOPE(dPlanoConta[descricaoN2]), BLANK(),
+			    vSubtotal = 0, vTotal, // Significa que é uma linha comum da DRE, retorna o vTotal (apenas o valor daquela linha).
+			    vSubtotal = 1, vAcumulado // Significa que é uma linha de subtotal retorna o vAcumulado (a soma de tudo o que veio antes).
+			)
+			```
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: DRE
+		lineageTag: 9beb0e35-e4d3-423b-befc-7621cee0dedc
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '$ Previsto' = ```
+			
+			VAR vSubtotal = MAX(dEstruturaDRE[subtotal]) // máximo da linha (só há dois valores 0 ou 1)
+			VAR vIndex = MAX(dEstruturaDRE[index]) // Máximo da linha (vai de 1 a 13)
+			VAR vTotal = [$ Valor Total Previsto] 
+			VAR vDetalharN2 = SELECTEDVALUE(dPlanoConta[detalharN2])
+			
+			VAR vAcumulado =
+			    CALCULATE(
+			        //altera o contexto de filtro
+			        [$ Valor Total Previsto],
+			            ALL(dEstruturaDRE), // só filtro externo
+			            VALUES(dEstruturaDRE[empresa]), //respeitando filtro por empresa, n mistura acumulado
+			            dEstruturaDRE[index] < vIndex // somar apenas os registros cujo índice seja menor que o índice da linha atual.
+			    )
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    vSubtotal = 1 && ISINSCOPE(dPlanoConta[descricaoN1]), BLANK(),
+			    vDetalharN2 = 0 && ISINSCOPE(dPlanoConta[descricaoN2]), BLANK(),
+			    vSubtotal = 0, vTotal, // Significa que é uma linha comum da DRE, retorna o vTotal (apenas o valor daquela linha).
+			    vSubtotal = 1, vAcumulado // Significa que é uma linha de subtotal retorna o vAcumulado (a soma de tudo o que veio antes).
+			)
+			```
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: DRE
+		lineageTag: 9124decc-d164-4106-b058-731a066c80e3
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '$ Meta' =
+			
+			IF(
+			    SELECTCOLUMNS(auxMeta, auxMeta[auxMeta Pedido]) = 0,
+			    [$ Orçado],
+			    [$ Previsto]
+			)
+		displayFolder: DRE
+		lineageTag: 4d2716a5-aa69-4ac8-8e1a-c5a1db83c795
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% Meta vs Realizado' = ```
+			
+			VAR vMeta = [$ Meta]
+			VAR vRealizado = [$ Realizado]
+			VAR vDif = vRealizado - vMeta
+			VAR vResultado = 
+			DIVIDE(
+			    vDif,
+			    ABS(vMeta)
+			)
+			RETURN
+			IF(vRealizado, vResultado)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: DRE
+		lineageTag: 4e99b44a-c256-425b-af1f-6335cd77000e
+
+	measure '$ Realizado YTD' =
+			
+			CALCULATE(
+			    [$ Realizado],
+			    DATESYTD(dCalendario[Data])
+			)
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: DRE
+		lineageTag: 4c5894af-7059-4695-92f6-62f698323bc2
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '$ Meta YTD' =
+			
+			CALCULATE(
+			    [$ Meta],
+			    DATESYTD(dCalendario[Data])
+			)
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: DRE
+		lineageTag: 2147a9e3-3a4a-4eb9-aeca-1f1f0aee5c37
+
+	measure '% Meta vs Realizado YTD' =
+			
+			VAR vMeta = CALCULATE([$ Meta YTD], dCalendario[dataPassada?] = TRUE())
+			VAR vRealizado = [$ Realizado YTD]
+			VAR vDif = vRealizado - vMeta
+			RETURN
+			DIVIDE(
+			    vDif,
+			    ABS(vMeta)
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: DRE
+		lineageTag: 64709b74-e7b3-4dc7-8469-66ea9fe7ca90
+
+	measure 'KPI Flag Mês' =
+			
+			IF([% Meta vs Realizado] < 0, 1, 0)
+		formatString: 0
+		displayFolder: KPI's
+		lineageTag: 8f5577a0-5210-4f71-9d5b-59130b7f5fcd
+
+	measure 'KPI Flag Mês YTD' =
+			
+			IF([% Meta vs Realizado YTD] < 0, 1, 0)
+		formatString: 0
+		displayFolder: KPI's
+		lineageTag: 6bc78095-7712-441c-a2fc-88a683cb11e3
+
+	measure 'KPI Flag' =
+			
+			IF(
+			    [KPI Flag Mês] = 1 && [KPI Flag Mês YTD] = 1,
+			    "🚩")
+		displayFolder: KPI's
+		lineageTag: f798fac0-b355-43a8-ba58-9534213fb597
+
+	measure 'Realizado Receita Bruta' =
+			
+			CALCULATE(
+			    [$ Realizado],
+			    dEstruturaDRE[index] = 1
+			)
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		displayFolder: DRE
+		lineageTag: 38aaba51-9bd9-4902-9a80-4b1544d30eae
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Realizado Margem de Contribuição' =
+			
+			CALCULATE(
+			    [$ Realizado],
+			    dEstruturaDRE[index] = 5
+			)
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		displayFolder: DRE
+		lineageTag: 154284ca-f30d-43de-9896-1bc079c89e5c
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Realizado Despesas' =
+			
+			CALCULATE(
+			    [$ Realizado],
+			    dEstruturaDRE[index] = 6
+			)
+		formatString: "R$"\ #,0.000;-"R$"\ #,0.000;"R$"\ #,0.000
+		displayFolder: DRE
+		lineageTag: 4e0079a0-18f6-4ccb-b961-f85887a1a54a
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '% Análise Vertical' =
+			
+			DIVIDE(
+			    [$ Realizado],
+			    [$ Realizado Receita Bruta Fixado]
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: DRE
+		lineageTag: 6cb06208-372d-4143-bcf7-1e513a3ba27c
+
+	measure '$ Realizado Receita Bruta Fixado' =
+			
+			CALCULATE(
+			    [Realizado Receita Bruta],
+			    ALLSELECTED(dPlanoConta)
+			)
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: DRE
+		lineageTag: 640ed22b-8de8-4208-bc2e-ca30113b6aa6
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '% Análise Vertical Margem de Contribuição' =
+			
+			DIVIDE(
+			    [Realizado Margem de Contribuição],
+			    [$ Realizado Receita Bruta Fixado]
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: DRE
+		lineageTag: 80b61d95-5c13-4238-8bd7-90b9e8da6afa
+
+	measure '% Análise Vertical Despesas' =
+			
+			DIVIDE(
+			    [Realizado Despesas],
+			    [$ Realizado Receita Bruta Fixado]
+			) * -1
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: DRE
+		lineageTag: 723cccf5-534c-44b1-b7b7-993e32bccedc
+
+	measure 'Card Mês Top 1' =
+			
+			VAR vTopMes =
+			    CALCULATETABLE(
+			        TOPN(
+			            1,
+			            ALL(dCalendario[MesAno]),
+			            [Realizado Receita Bruta],
+			            DESC
+			        ),
+			        ALL(dCalendario),
+			        VALUES(dCalendario[Ano])
+			    )
+			
+			RETURN
+			    MAXX(
+			        vTopMes,
+			        dCalendario[MesAno]
+			    )
+		displayFolder: KPI's
+		lineageTag: e18b1cae-78e7-429b-a628-6a01ed9f6d3f
+
+	measure '% Meta X Realizado Receita Bruta' =
+			
+			CALCULATE(
+			    [% Meta vs Realizado],
+			    dEstruturaDRE[index] = 1
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: DRE
+		lineageTag: 89ec1bf2-8058-4ba3-955c-e3a328611e3e
+
+	measure '% Meta X Realizado Magem de Contribuição' =
+			
+			CALCULATE(
+			    [% Meta vs Realizado],
+			    dEstruturaDRE[index] = 5
+			)
+		displayFolder: DRE
+		lineageTag: 01edba89-12d8-4f4d-bd50-b43f37f922bb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% Meta X Realizado Despesas' =
+			
+			CALCULATE(
+			    [% Meta vs Realizado],
+			    dEstruturaDRE[index] = 6
+			)
+		displayFolder: DRE
+		lineageTag: 0c1c6859-e421-461a-9648-a4e7fd3a0aa9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Card Meta X Realizado' =
+			
+			FORMAT(
+			    [% Meta vs Realizado],
+			    "+0.0% ✅; -0.0% ❌"
+			)
+		displayFolder: KPI's
+		lineageTag: b06d43ea-120f-4a86-adbd-22a6a86489ca
+
+	measure 'Card Meta X Realizado Despesas' =
+			
+			FORMAT(
+			    [% Meta X Realizado Despesas],
+			    "+0.0% ✅; -0.0% ❌"
+			)
+		displayFolder: KPI's
+		lineageTag: 3fffead4-5941-415e-bd46-35aabc70d488
+
+	measure 'Card Meta X Realizado Margem de Contribuição' =
+			
+			FORMAT(
+			    [% Meta X Realizado Magem de Contribuição],
+			    "+0.0% ✅; -0.0% ❌"
+			)
+		displayFolder: KPI's
+		lineageTag: 713345ce-b96f-46a3-a76a-ee1a65e8b330
+
+	measure 'Título Rótulo Meta' =
+			
+			"🎯" & VALUES(auxMeta[auxMeta]) & ":"
+		displayFolder: KPI's
+		lineageTag: 6213eeb8-4720-4d52-8088-5ab313fc3d88
+
+	measure 'Card Meta X Realizado Receita Bruta' =
+			
+			FORMAT(
+			    [% Meta X Realizado Receita Bruta],
+			    "+0.0% ✅; -0.0% ❌"
+			)
+		displayFolder: KPI's
+		lineageTag: 9f808bbe-1aca-4595-b465-77300f4f46c0
+
+	measure 'Card Meta Valor' =
+			
+			FORMAT([$ Meta], "R$ 0,0")
+		displayFolder: KPI's
+		lineageTag: f79bea14-5acd-4ca5-bb5b-e1694a862841
+
+	measure 'Título página' = ```
+			
+			
+			VAR vFilial = 
+			CONCATENATEX( 
+			    VALUES(dEstruturaDRE[empresa]),
+			    dEstruturaDRE[empresa], ", "
+			    )
+			
+			VAR vMesAno =
+			    SELECTEDVALUE(dCalendario[MesAno])
+			
+			VAR vMeta =
+			    MAXX(
+			        SUMMARIZE(
+			            auxMeta,
+			            auxMeta[auxMeta],
+			            auxMeta[auxMeta Campos]
+			        ),
+			        auxMeta[auxMeta]
+			    )
+			
+			RETURN
+			    "Realizado vs "
+			        & vMeta
+			        & " para "
+			        & vFilial
+			        & " no mês de "
+			        & vMesAno
+			```
+		displayFolder: KPI's
+		lineageTag: dc04d360-5ab1-4e2e-aafb-03b848bc0b3f
+
+	measure 'Título Análise Temporal' =
+			
+			VAR vContaDRE = SELECTEDVALUE(dEstruturaDRE[contaGerencial])
+			VAR vContaN1 = SELECTEDVALUE(dPlanoConta[descricaoN1])
+			VAR vContaN2 = SELECTEDVALUE(dPlanoConta[descricaoN2])
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    NOT ISBLANK(vContaN2), vContaN2,
+			    NOT ISBLANK(vContaN1), vContaN1,
+			    NOT ISBLANK(vContaDRE), vContaDRE,
+			    BLANK(),
+			    "= RESULTADO LÍQUIDO DO EXERCÍCIO"
+			)
+		displayFolder: KPI's
+		lineageTag: c6d3cb08-a0ad-4c8c-8853-1a4fb0191b1e
+
+	measure 'Subtitulo visual' = ```
+			
+			VAR vMesesNegativos = 
+			COUNTROWS(
+			    FILTER(
+			        ALL(
+			            dCalendario[MesAtual], dCalendario[MesNum]),
+			            [% Meta vs Realizado] < 0
+			    )
+			    )
+			VAR vMesesPositivos = 
+			COUNTROWS(
+			    FILTER(
+			        ALL(dCalendario[MesAno], dCalendario[MesNum]),
+			        [% Meta vs Realizado] >= 0 && NOT(ISBLANK([% Meta vs Realizado]))
+			    )
+			)
+			VAR vAno = SELECTEDVALUE(dCalendario[Ano])
+			RETURN
+			" Em " &
+			vAno &
+			" batemos a meta em " &
+			vMesesPositivos &
+			" meses e ficamos abaixo do " &
+			VALUES(auxMeta[auxMeta]) &
+			" em " &
+			vMesesNegativos &
+			" meses:"
+			
+			```
+		displayFolder: KPI's
+		lineageTag: ec7109e2-2235-40e1-9bac-40763a08c330
+
+	measure 'Subtitulo visual 2' = ```
+			
+			VAR vPiorMes = 
+			CALCULATE(
+			    TOPN(
+			        1,
+			        FILTER(VALUES(dCalendario[MesAno]), NOT(ISBLANK([$ Realizado]))),
+			        [% Meta vs Realizado],
+			        ASC
+			    ),
+			    ALL(dCalendario),
+			    VALUES(dCalendario[Ano]))
+			VAR vValorPiorMes = FORMAT(CALCULATE([% Meta vs Realizado], dCalendario[MesAno] = vPiorMes), "0.0%")
+			RETURN
+			" onde o pior mês foi " &
+			vPiorMes &
+			", com uma diferença de " &
+			vValorPiorMes &
+			" em relação ao "&
+			VALUES(auxMeta[auxMeta])&
+			" :"
+			```
+		displayFolder: KPI's
+		lineageTag: fa7952a4-1a90-4cd9-9fd1-3a9830736853
+
+	measure 'Subtitulo visual 3' =
+			
+			VAR vRealizadoYTD = FORMAT([$ Realizado YTD], "R$0,0")
+			VAR vDif = FORMAT([% Meta vs Realizado YTD], "0.0%;0.0%")
+			VAR vAno = SELECTEDVALUE(dCalendario[Ano])
+			RETURN
+			"No acumulado de " &
+			vAno &
+			" o realizado foi de " &
+			vRealizadoYTD &
+			" ("&
+			vDif &
+			IF([% Meta vs Realizado YTD] > 0, " acima do ", " abaixo do " &
+			VALUES(auxMeta[auxMeta])&
+			")")
+		displayFolder: KPI's
+		lineageTag: 52254811-c098-47e6-9359-b68ffcf5465b
+
+	column Column
+		isHidden
+		formatString: 0
+		lineageTag: df47138c-84bc-4a0c-ba48-aff96ddd97d9
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Medidas = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = b666385e1dbe41d993039a1f7a678200
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

@@ -1,0 +1,50 @@
+table fOrcamento
+	lineageTag: fe887a23-d766-4495-8530-f96b2d956269
+
+	column competencia_data
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 9bd9777b-8a67-46fc-8ba1-9fdcc5ee2cf8
+		summarizeBy: none
+		sourceColumn: competencia_data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column planoContas_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 26d767b4-c067-4215-bf2e-45e738686e8e
+		summarizeBy: none
+		sourceColumn: planoContas_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column valor
+		dataType: double
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 5a8fac63-616f-4ccb-8e01-648bc9bcf4d8
+		summarizeBy: sum
+		sourceColumn: valor
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	partition fOrcamento = m
+		mode: import
+		source =
+				let
+				  Origem = Excel.Workbook(File.Contents(CaminhoArquivo & "\BaseDados.xlsx"), true, true),
+				  #"Navegação 1" = Origem{[Item = "fOrcamento", Kind = "Sheet"]}[Data],
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Navegação 1",{{"competencia_data", type date}, {"planoContas_id", Int64.Type}, {"valor", Currency.Type}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

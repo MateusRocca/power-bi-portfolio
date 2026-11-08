@@ -1,0 +1,13 @@
+relationship bc694f67-0e58-6c66-b3c8-579c811b6386
+	fromColumn: Movimentação.Cliente
+	toColumn: Clientes.'Nome Cliente'
+
+relationship ac9ebdc6-1930-a2a0-914d-cac2a5d1d6a1
+	fromColumn: Movimentação.'Data da Movimentação'
+	toColumn: dCalendario.Date
+
+relationship d328330a-8307-4ed6-9d5d-9a282cd05883
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dCalendario.Date
+	toColumn: LocalDateTable_bca8a901-27de-48e7-81d5-bd05b0ed00c1.Date
+

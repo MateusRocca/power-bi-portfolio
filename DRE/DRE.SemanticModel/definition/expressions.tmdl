@@ -1,0 +1,8 @@
+/// Caminho do arquivo
+expression CaminhoArquivo = "C:\Users\T-GAMER\Downloads\Desafio-20260604T181725Z-3-001\Desafio" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: d2f40ec3-048e-43c0-85c5-2c350dbfbc9c
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Text
+

@@ -1,0 +1,59 @@
+table dCalendario
+	lineageTag: 6b3ea850-8ff0-47fe-a1a3-feb9c1eded07
+
+	column Date
+		lineageTag: 5cd38736-f628-4847-b7e6-3af03d078366
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ano = year(dCalendario[Date])
+		formatString: 0
+		lineageTag: ac775862-0e97-47f5-a315-6b00054ee8ce
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mês Num' = MONTH(dCalendario[Date])
+		formatString: 0
+		lineageTag: 37c23a2f-3c82-4b8b-9e4f-f00693070d6c
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mês Nome' = FORMAT([Date], "MMM")
+		lineageTag: d0e9a25a-333c-44ed-ae7b-97d1af8a45c4
+		summarizeBy: none
+		sortByColumn: 'Mês Num'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Dia Mês' = DAY(dCalendario[Date])
+		formatString: 0
+		lineageTag: 2a8512b8-aa74-4619-a0a6-b07cb6b2a590
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nome Dia' = FORMAT([Date], "ddd")
+		lineageTag: 692225cf-9f5f-472a-b7b9-cc38fca16a6b
+		summarizeBy: none
+		sortByColumn: 'Dia Semana'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Dia Semana' = WEEKDAY(dCalendario[Date])
+		formatString: 0
+		lineageTag: 797b07a6-b700-4af6-ae04-25ffdb3fdf3a
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dCalendario = calculated
+		mode: import
+		source = CALENDARAUTO()
+
+	annotation PBI_Id = 9cfc72fc1dc746439c7a47593f30f2a4
+

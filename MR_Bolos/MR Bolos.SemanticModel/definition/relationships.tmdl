@@ -1,0 +1,8 @@
+relationship AutoDetected_146e5f67-dbcc-4edf-b2ff-ed3e5c763fca
+	fromColumn: fVendas.ID_Produto
+	toColumn: dProdutos.ID_Produto
+
+relationship 89dc51e1-9908-5868-ef3b-acf6a9228420
+	fromColumn: fVendas.data
+	toColumn: dCalendario.Date
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "MR Bolos"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "e811ff04-0074-4243-a651-70cf3f83a59c"
+  }
+}

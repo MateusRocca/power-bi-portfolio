@@ -1,0 +1,93 @@
+table dProdutos
+	lineageTag: 98f46f12-330f-4215-ba01-7025fa4e555c
+
+	column tipo
+		dataType: string
+		lineageTag: 43a3d767-5d23-44f4-a859-757a1f6662b4
+		summarizeBy: none
+		sourceColumn: tipo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Produto
+		dataType: string
+		lineageTag: da2ead73-220a-4bb8-92d4-09fd0b2b5f51
+		summarizeBy: none
+		sourceColumn: Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Produto Simples'
+		dataType: string
+		lineageTag: 52f554a2-ead1-467b-b1f3-56b7c9ceca36
+		summarizeBy: none
+		sourceColumn: Produto Simples
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sabor
+		dataType: string
+		lineageTag: 70aa2295-3892-4556-b9cf-c19232e799e5
+		summarizeBy: none
+		sourceColumn: Sabor
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Produto e Sabor'
+		dataType: string
+		lineageTag: c6e66bc3-7c4a-4e12-afb6-002416dc8f12
+		summarizeBy: none
+		sourceColumn: Produto e Sabor
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Produto Completo'
+		dataType: string
+		lineageTag: 945692b2-69ed-46b2-aca4-5df9f533171d
+		summarizeBy: none
+		sourceColumn: Produto Completo
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID_Produto
+		dataType: int64
+		formatString: 0
+		lineageTag: 17e6b49b-ccaa-47af-883d-1697d13bfb35
+		summarizeBy: none
+		sourceColumn: ID_Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Categoria
+		dataType: string
+		lineageTag: f7e79776-2865-4bd2-8db9-8c5898409125
+		summarizeBy: none
+		sourceColumn: Categoria
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dProdutos = m
+		mode: import
+		source =
+				let
+				  Origem = Excel.Workbook(File.Contents("D:\Documentos\Trilha Dados + Nuvem\PowerBi\Xperium\Trilha 2 Data Analyst Professional\Hands On Dashboard com design Premium\Mod.1-20260227T003636Z-3-001\Mod.1\BaseFaturamento.xlsx"), true, true),
+				  #"Navegação 1" = Origem{[Item = "Sheet1", Kind = "Sheet"]}[Data],
+				  #"As outras colunas foram removidas" = Table.SelectColumns(#"Navegação 1", {"nome_produto", "tipo"}),
+				  #"Texto inserido antes do delimitador" = Table.AddColumn(#"As outras colunas foram removidas", "Produto", each Text.BeforeDelimiter(Text.From([nome_produto]), " -", 0), type text),
+				  #"Texto inserido antes do delimitador 1" = Table.AddColumn(#"Texto inserido antes do delimitador", "Produto Simples", each Text.BeforeDelimiter([Produto], "(", 0), type text),
+				  #"Texto inserido após o delimitador" = Table.AddColumn(#"Texto inserido antes do delimitador 1", "Sabor", each Text.AfterDelimiter(Text.From([nome_produto]), "- ", {0, RelativePosition.FromEnd}), type text),
+				  #"Texto aparado" = Table.TransformColumns(#"Texto inserido após o delimitador", {{"tipo", each Text.Trim(Text.From(_)), type nullable text}, {"Produto", each Text.Trim(Text.From(_)), type text}, {"Produto Simples", each Text.Trim(Text.From(_)), type text}, {"Sabor", each Text.Trim(Text.From(_)), type text}}),
+				  #"Personalização adicionada" = Table.AddColumn(#"Texto aparado", "Produto e Sabor", each [Produto Simples] & " (" & [Sabor] & ")"),
+				  #"Personalização adicionada 1" = Table.AddColumn(#"Personalização adicionada", "Produto Completo", each [Produto] & " (" & [Sabor] & ")"),
+				  #"Colunas removidas" = Table.RemoveColumns(#"Personalização adicionada 1", {"nome_produto"}),
+				  #"Duplicatas removidas" = Table.Distinct(#"Colunas removidas"),
+				  #"Todas as palavras foram colocadas em maiúscula" = Table.TransformColumns(#"Duplicatas removidas", {{"tipo", each Text.Proper(_), type nullable text}}),
+				  #"Índice adicionado" = Table.AddIndexColumn(#"Todas as palavras foram colocadas em maiúscula", "ID_Produto", 1, 1, Int64.Type),
+				  #"Tipo de coluna alterado" = Table.TransformColumnTypes(#"Índice adicionado", {{"ID_Produto", Int64.Type}, {"Produto Completo", type text}, {"Produto e Sabor", type text}}),
+				  #"Texto inserido antes do delimitador 2" = Table.AddColumn(#"Tipo de coluna alterado", "Categoria", each Text.BeforeDelimiter([Produto Simples], " ", 0), type text),
+				  #"Valor substituído" = Table.ReplaceValue(#"Texto inserido antes do delimitador 2", "Mini", "Salgadinhos", Replacer.ReplaceText, {"Categoria"})
+				in
+				  #"Valor substituído"
+
+	annotation PBI_ResultType = Table
+

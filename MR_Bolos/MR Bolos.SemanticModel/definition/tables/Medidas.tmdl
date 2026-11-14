@@ -1,0 +1,215 @@
+table Medidas
+	lineageTag: f5e49f13-e777-447a-860c-2701917f5911
+
+	measure Faturamento = sum(fVendas[faturamento])
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: Medidas Padrão
+		lineageTag: 9aa1ee13-0f8e-4d50-9c10-a490616091c6
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure Custos = SUM(fVendas[custo])
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		displayFolder: Medidas Padrão
+		lineageTag: 84f3af23-fe67-4d29-af18-6273c63d0547
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Margem Bruta' = [Faturamento] - [Custos]
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		displayFolder: Medidas Padrão
+		lineageTag: 62bea429-66fd-4870-b908-fde4c87f25b9
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '% Margem Bruta' = ```
+			
+			DIVIDE(
+			    [Margem Bruta], [Faturamento], 0)
+			    
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Medidas Padrão
+		lineageTag: 07eadffa-7ba7-43c9-b335-5dd0d41048cd
+
+	measure 'Total Pedidos' = DISTINCTCOUNT(fVendas[num_pedido])
+		formatString: 0
+		displayFolder: Medidas Padrão
+		lineageTag: 94262430-348b-4a63-b2c8-55048ce35aec
+
+	measure 'Ticket Médio' =
+			
+			DIVIDE(
+			    [Faturamento], [Total Pedidos]
+			)
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		displayFolder: Medidas Padrão
+		lineageTag: 1b764693-cc96-4e7d-bcff-50d0c22075cd
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Total Vendido Produtos' =
+			
+			SUM(fVendas[Quantidade])
+		formatString: 0
+		displayFolder: Medidas Padrão
+		lineageTag: e29d2bcd-a3d8-4be5-95ac-4a9ad59458cc
+
+	measure 'LY Faturamento' =
+			CALCULATE(
+			    [Faturamento],
+			    SAMEPERIODLASTYEAR(dCalendario[Date]))
+		formatString: 0
+		displayFolder: Medidas Temporais
+		lineageTag: 41088f47-0f12-4b6f-afe5-10e64051e2d8
+
+	measure 'LY Custos' =
+			
+			CALCULATE(
+			    [Custos],
+			    SAMEPERIODLASTYEAR(dCalendario[Date])
+			)
+		displayFolder: Medidas Temporais
+		lineageTag: 6be97076-ad61-464a-a89e-58cbb8c2f5df
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'LY Margem Bruta' =
+			
+			CALCULATE(
+			    [Margem Bruta],
+			    SAMEPERIODLASTYEAR(dCalendario[Date])
+			)
+		displayFolder: Medidas Temporais
+		lineageTag: 7a644694-5579-427a-9042-8f78de28cf7c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'LY Margem Bruta %' =
+			
+			CALCULATE(
+			    [% Margem Bruta],
+			    SAMEPERIODLASTYEAR(dCalendario[Date])
+			)
+		displayFolder: Medidas Temporais
+		lineageTag: 42bce8a4-5a04-43ed-b160-2d1e70f58e7a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'LY Total Pedidos' =
+			
+			CALCULATE(
+			    [Total Pedidos],
+			    SAMEPERIODLASTYEAR(dCalendario[Date])
+			)
+		formatString: 0
+		displayFolder: Medidas Temporais
+		lineageTag: 5fb937f0-baab-41b3-b5e3-af49cd30316e
+
+	measure 'LY Ticket Médio' =
+			
+			CALCULATE(
+			    [Ticket Médio],
+			    SAMEPERIODLASTYEAR(dCalendario[Date])
+			)
+		displayFolder: Medidas Temporais
+		lineageTag: 1b5490f6-bccc-460c-a42c-925cc6f63414
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'LY Total Vendido Produtos' =
+			
+			CALCULATE(
+			    [Total Vendido Produtos],
+			    SAMEPERIODLASTYEAR(dCalendario[Date])
+			)
+		formatString: 0
+		displayFolder: Medidas Temporais
+		lineageTag: 2d66aa59-f0e2-4ca5-b781-64ef05369fe7
+
+	measure '% YoY Faturamento' =
+			
+			COALESCE(
+			    DIVIDE([Faturamento] - [LY Faturamento], [LY Faturamento]), "-")
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Medidas Temporais
+		lineageTag: af713678-9807-495a-a07d-7cb7d1cd325f
+
+	measure '% YoY Custos' =
+			
+			COALESCE(
+			    DIVIDE([Custos] - [LY Custos], [LY Custos]), "-")
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Medidas Temporais
+		lineageTag: 4aafa631-23d1-4a67-916c-0935a1d91498
+
+	measure '% YoY Margem' =
+			
+			COALESCE(
+			    DIVIDE([Margem Bruta] - [LY Margem Bruta], [LY Margem Bruta]), "-")
+		displayFolder: Medidas Temporais
+		lineageTag: 1a6be192-6dc2-410e-8506-2c356f66b902
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% YoY Margem Bruta %' =
+			
+			COALESCE(
+			    DIVIDE([Margem Bruta] - [LY Margem Bruta], [LY Margem Bruta]), "-")
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Medidas Temporais
+		lineageTag: 38551056-7a13-4e46-8102-3d1ef782fe45
+
+	measure '% YoY Ticket Médio' =
+			
+			COALESCE(
+			    DIVIDE([Ticket Médio] - [LY Ticket Médio], [LY Ticket Médio]), "-")
+		displayFolder: Medidas Temporais
+		lineageTag: 30ddb8cb-1507-4188-9af5-4d021ed94d4b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% YoY Total Pedidos' =
+			
+			COALESCE(
+			    DIVIDE([Total Pedidos] - [LY Total Pedidos], [LY Total Pedidos]), "-")
+		displayFolder: Medidas Temporais
+		lineageTag: c635ce67-2ab9-48a2-ac17-a0a7068c7814
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'VS Ano Anterior' = "vs. " & COALESCE(SELECTEDVALUE(dCalendario[Ano])-1, "-")
+		displayFolder: Medidas Temporais
+		lineageTag: 1be54583-0d92-4cf5-a2bd-34c531744abe
+
+	measure 'Média Pedidos Por Dia' = ```
+			
+			DIVIDE(
+			    [Total Pedidos], 
+			    DISTINCTCOUNT(fVendas[data]
+			    )
+			)
+			```
+		displayFolder: Medidas Padrão
+		lineageTag: ebef6e53-fd1a-42d7-9235-c08cb76c6a49
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Column
+		isHidden
+		formatString: 0
+		lineageTag: 89a8a564-30d6-4b7e-ad4d-b136516ea92b
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Medidas = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = b0e3bc05d1964d2c93f93b8129c5e7df
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

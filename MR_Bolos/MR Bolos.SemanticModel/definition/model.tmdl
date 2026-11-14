@@ -1,0 +1,26 @@
+model Model
+	culture: pt-BR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: pt-BR
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["dProdutos","fVendas"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dProdutos
+ref table fVendas
+ref table dCalendario
+ref table Medidas
+ref table _Campo_Evol_Col
+ref table _Campos_Evol_Lin
+ref table _Campos_Medidas_Produto
+ref table _Campos_Produto
+
+ref cultureInfo pt-BR
+

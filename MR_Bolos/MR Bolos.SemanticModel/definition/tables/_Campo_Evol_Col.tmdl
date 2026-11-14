@@ -1,0 +1,54 @@
+table _Campo_Evol_Col
+	lineageTag: 9fc43665-7839-40ee-8d80-4e38a58db7d3
+
+	column _Campo_Evol_Col
+		lineageTag: 48ae49db-36dc-4b3e-8e8c-aa298a405312
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: '_Campo_Evol_Col Pedido'
+
+		relatedColumnDetails
+			groupByColumn: '_Campo_Evol_Col Campos'
+
+		annotation SummarizationSetBy = Automatic
+
+	column '_Campo_Evol_Col Campos'
+		isHidden
+		lineageTag: b2b9639c-7480-4516-8bf7-0f69a8bac859
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: '_Campo_Evol_Col Pedido'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column '_Campo_Evol_Col Pedido'
+		isHidden
+		formatString: 0
+		lineageTag: 477d5c97-f04e-4559-99ef-62c5acb5a99e
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Campo_Evol_Col = calculated
+		mode: import
+		source =
+				{
+				    ("Faturamento", NAMEOF('Medidas'[Faturamento]), 0),
+				    ("Custos", NAMEOF('Medidas'[Custos]), 1),
+				    ("Margem Bruta", NAMEOF('Medidas'[Margem Bruta]), 2),
+				    ("% Margem Bruta", NAMEOF('Medidas'[% Margem Bruta]), 3),
+				    ("LY Faturamento", NAMEOF('Medidas'[LY Faturamento]), 4),
+				    ("LY Custos", NAMEOF('Medidas'[LY Custos]), 5),
+				    ("LY Margem Bruta", NAMEOF('Medidas'[LY Margem Bruta]), 6),
+				    ("LY Margem Bruta %", NAMEOF('Medidas'[LY Margem Bruta %]), 7)
+				}
+
+	annotation PBI_Id = 7c95625683814787ad001dfeb81193c7
+
